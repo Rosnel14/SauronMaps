@@ -10,7 +10,7 @@
 
 @implementation Edge
 
--(instancetype)initWithParameters:(int)vertexOne nextVertex:(int)vertexTwo weight:(int)Weight{
+-(instancetype)initWithParameters:(NSString *)vertexOne nextVertex:(NSString *)vertexTwo weight:(int)Weight{
     if(self){
         self = [super init];
         self.startVertex = vertexOne;

@@ -7,17 +7,18 @@
 
 #ifndef Edge_h
 #define Edge_h
+#import <Foundation/Foundation.h>
 
-@interface Edge : NSObject
+@interface Edge: NSObject
 
-@property int startVertex; //index of the vertex list
+@property NSString * startVertex; //index of the vertex list
 
-@property int endVertex; //index of the vertex list 
+@property NSString * endVertex; //index of the vertex list 
 
 @property int weight;
 
 //constructor 
--(instancetype)initWithParameters:(int)vertexOne nextVertex:(int)vertexTwo weight:(int)Weight;
+-(instancetype)initWithParameters:(NSString *)vertexOne nextVertex:(NSString *)vertexTwo weight:(int)Weight;
 
 @end
 

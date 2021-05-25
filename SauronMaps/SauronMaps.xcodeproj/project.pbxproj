@@ -18,9 +18,10 @@
 		98446BD0265693B5008E9DF0 /* Graph.m in Sources */ = {isa = PBXBuildFile; fileRef = 98446BCF265693B5008E9DF0 /* Graph.m */; };
 		98446BD3265693C4008E9DF0 /* Vertex.m in Sources */ = {isa = PBXBuildFile; fileRef = 98446BD2265693C4008E9DF0 /* Vertex.m */; };
 		98446BD6265693D4008E9DF0 /* Edge.m in Sources */ = {isa = PBXBuildFile; fileRef = 98446BD5265693D4008E9DF0 /* Edge.m */; };
-		98446BD9265693FB008E9DF0 /* PriorityyQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 98446BD8265693FA008E9DF0 /* PriorityyQueue.m */; };
 		98460AB52657477F008C495F /* map-middleearth.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98460AB42657477E008C495F /* map-middleearth.jpg */; };
 		98460AB72657478F008C495F /* map-middleearth.txt in Resources */ = {isa = PBXBuildFile; fileRef = 98460AB62657478F008C495F /* map-middleearth.txt */; };
+		988BF1E5265A8DF100B1519C /* PriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 988BF1E4265A8DF100B1519C /* PriorityQueue.m */; };
+		988BF1E8265AF94300B1519C /* Path.m in Sources */ = {isa = PBXBuildFile; fileRef = 988BF1E7265AF94300B1519C /* Path.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,9 +45,11 @@
 		98446BD4265693CE008E9DF0 /* Edge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Edge.h; sourceTree = "<group>"; };
 		98446BD5265693D4008E9DF0 /* Edge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Edge.m; sourceTree = "<group>"; };
 		98446BD7265693EE008E9DF0 /* PriorityQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PriorityQueue.h; sourceTree = "<group>"; };
-		98446BD8265693FA008E9DF0 /* PriorityyQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PriorityyQueue.m; sourceTree = "<group>"; };
 		98460AB42657477E008C495F /* map-middleearth.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "map-middleearth.jpg"; sourceTree = "<group>"; };
 		98460AB62657478F008C495F /* map-middleearth.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "map-middleearth.txt"; sourceTree = "<group>"; };
+		988BF1E4265A8DF100B1519C /* PriorityQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PriorityQueue.m; sourceTree = "<group>"; };
+		988BF1E6265AF8D800B1519C /* Path.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
+		988BF1E7265AF94300B1519C /* Path.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Path.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +83,8 @@
 			isa = PBXGroup;
 			children = (
 				98460AB62657478F008C495F /* map-middleearth.txt */,
+				988BF1E6265AF8D800B1519C /* Path.h */,
+				988BF1E7265AF94300B1519C /* Path.m */,
 				98460AB42657477E008C495F /* map-middleearth.jpg */,
 				98446BB426569353008E9DF0 /* AppDelegate.h */,
 				98446BB526569353008E9DF0 /* AppDelegate.m */,
@@ -100,7 +105,7 @@
 				98446BD4265693CE008E9DF0 /* Edge.h */,
 				98446BD5265693D4008E9DF0 /* Edge.m */,
 				98446BD7265693EE008E9DF0 /* PriorityQueue.h */,
-				98446BD8265693FA008E9DF0 /* PriorityyQueue.m */,
+				988BF1E4265A8DF100B1519C /* PriorityQueue.m */,
 			);
 			path = SauronMaps;
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 		98446BA926569353008E9DF0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = NO;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
 					98446BB026569353008E9DF0 = {
@@ -178,9 +184,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				98446BBD26569353008E9DF0 /* GameScene.m in Sources */,
+				988BF1E8265AF94300B1519C /* Path.m in Sources */,
+				988BF1E5265A8DF100B1519C /* PriorityQueue.m in Sources */,
 				98446BD3265693C4008E9DF0 /* Vertex.m in Sources */,
 				98446BC026569353008E9DF0 /* GameViewController.m in Sources */,
-				98446BD9265693FB008E9DF0 /* PriorityyQueue.m in Sources */,
 				98446BD6265693D4008E9DF0 /* Edge.m in Sources */,
 				98446BC826569354008E9DF0 /* main.m in Sources */,
 				98446BD0265693B5008E9DF0 /* Graph.m in Sources */,
@@ -253,7 +260,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -306,7 +313,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
