@@ -130,6 +130,14 @@
     //add all adjacent nodes from the src into PQ (satisfy loop condition)
     priorityQ = [self addAllAdjacentVertices:priorityQ vertex:src];
     
+    //initalize Unvisited array
+    NSMutableArray * unvisitedVertices = [[NSMutableArray alloc] init];
+    
+    for(int i =0; i<VERTICES_COUNT; i++){
+        [unvisitedVertices addObject:[self.vertexList objectAtIndex:i].name];
+    }
+    
+    
     //while priority queue is not empty, i.e. all paths have not been found or we're not done
     while ([priorityQ isEmpty] == false) {
         
@@ -148,6 +156,9 @@
                     Path * newPath = [[Path alloc] initWithParameters:MinimumEdge.startVertex parent:MinimumEdge.endVertex weight:MinimumEdge.weight];
                     
                     [pathCostArray replaceObjectAtIndex:i withObject:newPath]; //replace with the newest smallest distance
+                    
+                    //remove sourceV from unvisited array
+                    [unvisitedVertices removeObject:[pathCostArray objectAtIndex:i].sourceV];
                     
                     //make endpoint(of min) the new src
                     
@@ -173,8 +184,75 @@
         }
     }
     
+    pathCostArray = [self fillPathCostTable:pathCostArray UnvisitedList:unvisitedVertices];//make unvisited list
     return pathCostArray;
 }
+
+//there will be paths that are not considered by this algorithim,
+//to account for that the unvisted source vertices must be acounted for
+-(NSMutableArray *)fillPathCostTable:(NSMutableArray *)currentPathCostArray UnvisitedList:(NSMutableArray<NSString*>*)unvisitedVertices{
+   
+    //path cost array init
+    NSMutableArray<Path *>* newPathCostArray = [[NSMutableArray alloc] init];
+    newPathCostArray = currentPathCostArray;
+    
+    int count = 0; //lazy incrementing
+    
+    //get the first src vertex
+    Vertex * src = [[Vertex alloc] init];
+    
+    //priority queue init
+    PriorityQueue * PQ = [[PriorityQueue alloc] init];
+    
+    //init src
+    for(int i=0;i<VERTICES_COUNT;i++){
+        if([[self.vertexList objectAtIndex:i].name isEqualToString:[unvisitedVertices firstObject]]){
+            src = [self.vertexList objectAtIndex:i];
+            break;
+        }
+        
+}
+    while ([unvisitedVertices count] != 0 && count < VERTICES_COUNT) { //while not empty
+        
+       //add all adjacent nodes
+        [self addAllAdjacentVertices:PQ vertex:src];
+        
+        
+        //get minimum path
+        Edge * MinimumEdge = [PQ poll];
+        
+        //if less than current weight update path cost array
+        //else remove from pq
+        if([[newPathCostArray objectAtIndex:count].sourceV isEqualToString:MinimumEdge.startVertex]){
+            if(MinimumEdge.weight < [newPathCostArray objectAtIndex:count].weight){
+            
+                Path * newPath = [[Path alloc] initWithParameters:MinimumEdge.startVertex parent:MinimumEdge.endVertex weight:MinimumEdge.weight];
+                
+                [newPathCostArray replaceObjectAtIndex:count withObject:newPath]; //replace with the newest smallest distance
+            } else {
+            [PQ remove:MinimumEdge];
+            count++;
+        }
+        }else{
+            count++;
+            continue;
+        }
+        
+        //remove src from univisited list
+        [unvisitedVertices removeObject:[unvisitedVertices firstObject]];
+        
+        //make src next vertex on unvisited list
+        for(int i=0;i<VERTICES_COUNT;i++){
+            if([[self.vertexList objectAtIndex:i].name isEqualToString: [unvisitedVertices firstObject]]){
+                src = [self.vertexList objectAtIndex:i];
+                break;
+            }
+        }
+        //count++;
+}
+    return newPathCostArray;
+}
+
 
 //make it so that the inital costs of paths will be infty, so that way any intial comparison will work as desired
 -(NSMutableArray *)initalizePCArr:(NSMutableArray<Path *> *)pathCostArray vertex:(Vertex *)src{
