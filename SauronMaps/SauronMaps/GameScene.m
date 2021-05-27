@@ -6,71 +6,161 @@
 //
 
 #import "GameScene.h"
+#import "Graph.h"
+#import "Vertex.h"
+#import "Edge.h"
+#import "Path.h"
+#import "PriorityQueue.h"
 
 @implementation GameScene {
-    SKShapeNode *_spinnyNode;
-    SKLabelNode *_label;
+    Graph * gameGraph;
+    NSMutableArray<Path *> * pathCostTable;
+    int VERTEX_RADIUS;
+    int storedValueFontSize;
 }
 
 - (void)didMoveToView:(SKView *)view {
     // Setup your scene here
+    [self setBackgroundColor:[UIColor blackColor]];
     
-    // Get label node from scene and store it for use later
-    _label = (SKLabelNode *)[self childNodeWithName:@"//helloLabel"];
+    //show map
+    SKSpriteNode * map =[SKSpriteNode spriteNodeWithImageNamed:@"Image"];
+    [map setSize:CGSizeMake(653, 398)];
+    [self addChild:map];
     
-    _label.alpha = 0.0;
-    [_label runAction:[SKAction fadeInWithDuration:2.0]];
+    //init instance variables
+    VERTEX_RADIUS = 16;
+    storedValueFontSize = 12;
     
-    CGFloat w = (self.size.width + self.size.height) * 0.05;
+    // init data structures
+            gameGraph = [[Graph alloc] init];
+            [gameGraph constructFromFile];
     
-    // Create shape node to use during mouse interaction
-    _spinnyNode = [SKShapeNode shapeNodeWithRectOfSize:CGSizeMake(w, w) cornerRadius:w * 0.3];
-    _spinnyNode.lineWidth = 2.5;
+            Vertex * testVertexSrc = [gameGraph.vertexList objectAtIndex:0];
     
-    [_spinnyNode runAction:[SKAction repeatActionForever:[SKAction rotateByAngle:M_PI duration:1]]];
-    [_spinnyNode runAction:[SKAction sequence:@[
-                                                [SKAction waitForDuration:0.5],
-                                                [SKAction fadeOutWithDuration:0.5],
-                                                [SKAction removeFromParent],
-                                                ]]];
+            pathCostTable = [gameGraph shortestPath:testVertexSrc];
+
+    //draw vertices
+    [self drawVertices];
+    //draw paths
+    [self drawPaths];
 }
 
-
-- (void)touchDownAtPoint:(CGPoint)pos {
-    SKShapeNode *n = [_spinnyNode copy];
-    n.position = pos;
-    n.strokeColor = [SKColor greenColor];
-    [self addChild:n];
+-(void)drawVertices{
+    for (int i=0; i<14; i++) {
+        SKShapeNode * tempVertex = [SKShapeNode shapeNodeWithCircleOfRadius:VERTEX_RADIUS];
+        [tempVertex setFillColor:[UIColor redColor]];
+        SKLabelNode *nodeStoredValue = [SKLabelNode labelNodeWithFontNamed:@"Arial"];nodeStoredValue.text = [gameGraph.vertexList objectAtIndex:i].name;nodeStoredValue.fontSize = storedValueFontSize;
+        [nodeStoredValue setColor:[UIColor blackColor]];
+        [tempVertex setPosition:(CGPointMake([gameGraph.vertexList objectAtIndex:i].yCord, 300-[gameGraph.vertexList objectAtIndex:i].xCord))];
+        [nodeStoredValue setPosition:CGPointMake([gameGraph.vertexList objectAtIndex:i].yCord, 300-[gameGraph.vertexList objectAtIndex:i].xCord)];
+        [self addChild:tempVertex];
+        [self addChild:nodeStoredValue];
+    }
 }
 
-- (void)touchMovedToPoint:(CGPoint)pos {
-    SKShapeNode *n = [_spinnyNode copy];
-    n.position = pos;
-    n.strokeColor = [SKColor blueColor];
-    [self addChild:n];
+-(void)drawPaths{
+    for(int i =0; i<17;i++){
+    Edge * tempEdge = [[Edge alloc] init];
+    tempEdge = [gameGraph.edgeList objectAtIndex:i];
+        SKLabelNode *weightValue = [SKLabelNode labelNodeWithFontNamed:@"Arial"];weightValue.text = [NSString stringWithFormat:@"%i",tempEdge.weight];weightValue.fontSize = storedValueFontSize;
+        [weightValue setPosition:CGPointMake(([self getVertexYcord:tempEdge.startVertex] + [self getVertexYcord:tempEdge.endVertex])/2, (300-[self getVertexXcord:tempEdge.startVertex] +300-[self getVertexXcord:tempEdge.endVertex])/2)];
+    SKShapeNode *tempLine = [SKShapeNode node];
+    CGMutablePathRef pathToDraw = CGPathCreateMutable();
+    CGPathMoveToPoint(pathToDraw, NULL, [self getVertexYcord:tempEdge.startVertex], 300-[self getVertexXcord:tempEdge.startVertex]);
+    CGPathAddLineToPoint(pathToDraw, NULL,[self getVertexYcord:tempEdge.endVertex], 300-[self getVertexXcord:tempEdge.endVertex]);
+    tempLine.path = pathToDraw;
+    [tempLine setStrokeColor:[SKColor blueColor]];
+    [self addChild:tempLine];
+    [self addChild:weightValue];
+        
+    }
 }
 
-- (void)touchUpAtPoint:(CGPoint)pos {
-    SKShapeNode *n = [_spinnyNode copy];
-    n.position = pos;
-    n.strokeColor = [SKColor redColor];
-    [self addChild:n];
+-(Vertex *)getVertexObj:(NSString *)name{
+    for(int i=0;i<13;i++){
+        if([[gameGraph.vertexList objectAtIndex:i].name isEqualToString:name]){
+            return [gameGraph.vertexList objectAtIndex:i];
+            break;
+        }
+    }
+    return nil;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // Run 'Pulse' action from 'Actions.sks'
-    [_label runAction:[SKAction actionNamed:@"Pulse"] withKey:@"fadeInOut"];
+//remember to flip declarations, coordinates are wrong
+-(int)getVertexXcord:(NSString *)name{
     
-    for (UITouch *t in touches) {[self touchDownAtPoint:[t locationInNode:self]];}
+    for(int i=0;i<13;i++){
+        if([[gameGraph.vertexList objectAtIndex:i].name isEqualToString:name]){
+            return [gameGraph.vertexList objectAtIndex:i].xCord;
+            break;
+        }
+    }
+    return -1;
 }
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    for (UITouch *t in touches) {[self touchMovedToPoint:[t locationInNode:self]];}
+
+//remember to flip declarations, coordinates are wrong
+-(int)getVertexYcord:(NSString *)name{
+    
+    for(int i=0;i<13;i++){
+        if([[gameGraph.vertexList objectAtIndex:i].name isEqualToString:name]){
+            return [gameGraph.vertexList objectAtIndex:i].yCord;
+            break;
+        }
+    }
+    return -1;
 }
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    for (UITouch *t in touches) {[self touchUpAtPoint:[t locationInNode:self]];}
+
+//this will draw path from hobbiton to mount doom
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    Vertex * src = [[Vertex alloc] init];
+    src = [gameGraph.vertexList firstObject];
+    NSMutableArray<NSString*> * pathToBeDrawn = [[NSMutableArray alloc] init];
+    
+    for(int i=0;i<[pathCostTable count]-1;i++){
+        if([src.name isEqualToString:[pathCostTable objectAtIndex:i].sourceV]){
+            
+            //add to path to be drawn
+            [pathToBeDrawn addObject:[pathCostTable objectAtIndex:i].sourceV];
+            [pathToBeDrawn addObject:[pathCostTable objectAtIndex:i].previousV];
+            
+            //make src the previousV
+            src = [self getVertexObj:[pathCostTable objectAtIndex:i].previousV];
+        }
+    }
+    pathToBeDrawn = [self removeDuplicates:pathToBeDrawn];
+    [self drawShortestPath:pathToBeDrawn];
+    
 }
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    for (UITouch *t in touches) {[self touchUpAtPoint:[t locationInNode:self]];}
+
+-(void)drawShortestPath:(NSMutableArray <NSString*>*)pathTobeDrawn{
+    for (int i=0; i<[pathTobeDrawn count]-1; i++) {
+        SKShapeNode * tempVertex = [SKShapeNode shapeNodeWithCircleOfRadius:VERTEX_RADIUS];
+        [tempVertex setFillColor:[UIColor blueColor]];
+        SKLabelNode *nodeStoredValue = [SKLabelNode labelNodeWithFontNamed:@"Arial"];nodeStoredValue.text = [pathTobeDrawn objectAtIndex:i];nodeStoredValue.fontSize = storedValueFontSize;
+        [nodeStoredValue setColor:[UIColor blackColor]];
+        [tempVertex setPosition:(CGPointMake([self getVertexYcord:[pathTobeDrawn objectAtIndex:i]], 300-[self getVertexXcord:[pathTobeDrawn objectAtIndex:i]]))];
+        [nodeStoredValue setPosition:CGPointMake([self getVertexYcord:[pathTobeDrawn objectAtIndex:i]], 300-[self getVertexXcord:[pathTobeDrawn objectAtIndex:i]])];
+        
+        [self addChild:tempVertex];
+        [self addChild:nodeStoredValue];
+    }
+    
+    //should also print recipe (for mr.bakker to verify my paths are right!)
+    for(int i=0; i<[pathTobeDrawn count];i++){
+        NSLog(@"%@",[pathTobeDrawn objectAtIndex:i]);
+    }
+    
+}
+
+-(NSMutableArray *)removeDuplicates:(NSMutableArray<NSString *>*)array{
+    for(int i=0;i<[array count]-1;i++){
+        if([[array objectAtIndex:i] isEqualToString:[array objectAtIndex:i+1]]){
+            
+            [array removeObjectAtIndex:i];
+        }
+    }
+    return array;
 }
 
 

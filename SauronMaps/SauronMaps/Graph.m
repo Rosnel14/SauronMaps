@@ -145,13 +145,13 @@
         Edge * MinimumEdge = [priorityQ poll];
         
         //go through path cost array, update if path from previous to src is now less than initially instantiated
-        NSLog(@"%i",[pathCostArray count]);
+        //NSLog(@"%i",[pathCostArray count]);
         for(int i=0; i < [pathCostArray count]; i++){
-            NSLog(@"%@",[pathCostArray objectAtIndex:i]);
+            //NSLog(@"%@",[pathCostArray objectAtIndex:i]);
             if([[pathCostArray objectAtIndex:i].sourceV isEqualToString:MinimumEdge.startVertex]){
                 
                 //check if weight is less than the current short path from previous vertex
-                NSLog(@"%i",i);
+                //NSLog(@"%i",i);
                 if(MinimumEdge.weight < [pathCostArray objectAtIndex:i].weight){
                     Path * newPath = [[Path alloc] initWithParameters:MinimumEdge.startVertex parent:MinimumEdge.endVertex weight:MinimumEdge.weight];
                     
@@ -175,7 +175,6 @@
                     
                 }
                 else { //if it is not less than current shortest path from prev, remove from queue
-//                    Path * newPath = [[Path alloc] initWithParameters:MinimumEdge.endVertex parent:MinimumEdge.startVertex weight:MinimumEdge.weight];
 
                     [priorityQ remove:MinimumEdge]; //remove from pq
                     break;

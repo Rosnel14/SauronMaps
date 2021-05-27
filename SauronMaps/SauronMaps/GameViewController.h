@@ -10,5 +10,6 @@
 #import <GameplayKit/GameplayKit.h>
 
 @interface GameViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UILabel *DisplayField;
 
 @end
